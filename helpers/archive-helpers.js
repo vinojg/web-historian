@@ -12,6 +12,7 @@ var _ = require('underscore');
 exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
+  //list: path.join(__dirname, '../web/public/index.html'),
   list: path.join(__dirname, '../archives/sites.txt')
 };
 
@@ -23,18 +24,59 @@ exports.initialize = function(pathsObj) {
 };
 
 // The following function names are provided to you to suggest how you might
-// modularize your code. Keep it clean!
+// modularize your code. Keep it clean! 
 
 exports.readListOfUrls = function(callback) {
+  
+  fs.readFile(exports.paths.list, 'utf8', (err, data) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, data.toString().split('\n'));
+    } 
+    
+  });
 };
 
 exports.isUrlInList = function(url, callback) {
+  
+  exports.readListOfUrls(function(err, urls) {
+    var found = false;
+    if (err) {
+      callback(err, null);
+    }
+    for (let i = 0; i < urls.length; i++) {
+      if (urls[i] === url) {
+        found = true;
+      }
+    }
+    callback(null, found);
+  });  
+  
 };
 
 exports.addUrlToList = function(url, callback) {
+
+
+  fs.appendFile(exports.paths.list, url, function(err) {
+    if (err) {
+      throw err;
+    }
+    callback();
+  });
+  
 };
 
 exports.isUrlArchived = function(url, callback) {
+  fs.exists(exports.paths.archivedSites + '/' + url, (exists) => {
+    if (exists) {
+      console.log('file Exists');
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  });
+  
 };
 
 exports.downloadUrls = function(urls) {

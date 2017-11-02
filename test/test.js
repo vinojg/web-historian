@@ -81,8 +81,7 @@ describe('archive helpers', function() {
     it('should read urls from sites.txt', function (done) {
       var urlArray = ['example1.com', 'example2.com'];
       fs.writeFileSync(archive.paths.list, urlArray.join('\n'));
-
-      archive.readListOfUrls(function(urls) {
+      archive.readListOfUrls(function(err, urls) {
         expect(urls).to.deep.equal(urlArray);
         done();
       });
@@ -97,12 +96,12 @@ describe('archive helpers', function() {
       var counter = 0;
       var total = 2;
 
-      archive.isUrlInList('example1.com', function (exists) {
+      archive.isUrlInList('example1.com', function (err, exists) {
         expect(exists).to.be.true;
         if (++counter === total) { done(); }
       });
 
-      archive.isUrlInList('gibberish', function (exists) {
+      archive.isUrlInList('gibberish', function (err, exists) {
         expect(exists).to.be.false;
         if (++counter === total) { done(); }
       });
@@ -115,7 +114,7 @@ describe('archive helpers', function() {
       fs.writeFileSync(archive.paths.list, urlArray.join('\n'));
 
       archive.addUrlToList('someurl.com', function () {
-        archive.isUrlInList('someurl.com', function (exists) {
+        archive.isUrlInList('someurl.com', function (err, exists) {
           expect(exists).to.be.true;
           done();
         });
@@ -130,12 +129,12 @@ describe('archive helpers', function() {
       var counter = 0;
       var total = 2;
 
-      archive.isUrlArchived('www.example.com', function (exists) {
+      archive.isUrlArchived('www.example.com', function (err, exists) {
         expect(exists).to.be.true;
         if (++counter === total) { done(); }
       });
 
-      archive.isUrlArchived('www.notarchived.com', function (exists) {
+      archive.isUrlArchived('www.notarchived.com', function (err, exists) {
         expect(exists).to.be.false;
         if (++counter === total) { done(); }
       });
