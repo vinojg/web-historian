@@ -70,7 +70,7 @@ exports.addUrlToList = function(url, callback) {
 exports.isUrlArchived = function(url, callback) {
   fs.exists(exports.paths.archivedSites + '/' + url, (exists) => {
     if (exists) {
-      console.log('file Exists');
+      //console.log('file Exists');
       callback(null, true);
     } else {
       callback(null, false);
@@ -80,4 +80,17 @@ exports.isUrlArchived = function(url, callback) {
 };
 
 exports.downloadUrls = function(urls) {
+  // exports.paths.archivedSites
+  // Get all links from sites.txt, create file in sites folder
+  // urls = list array
+  
+  urls.forEach((url) => {
+    fs.writeFile(exports.paths.archivedSites + '/' + url, '', (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  });
 };
+
+
